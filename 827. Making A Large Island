@@ -1,0 +1,107 @@
+You are given an n x n binary matrix grid. You are allowed to change at most one 0 to be 1.
+
+Return the size of the largest island in grid after applying this operation.
+
+An island is a 4-directionally connected group of 1s.
+
+ 
+
+Example 1:
+
+Input: grid = [[1,0],[0,1]]
+Output: 3
+Explanation: Change one 0 to 1 and connect two 1s, then we get an island with area = 3.
+
+Example 2:
+
+Input: grid = [[1,1],[1,0]]
+Output: 4
+Explanation: Change the 0 to 1 and make the island bigger, only one island with area = 4.
+
+Example 3:
+
+Input: grid = [[1,1],[1,1]]
+Output: 4
+Explanation: Can't change any 0 to 1, only one island with area = 4.
+ 
+
+Constraints:
+
+n == grid.length
+n == grid[i].length
+1 <= n <= 500
+grid[i][j] is either 0 or 1.
+
+class Solution {
+public:
+    int largestIsland(vector<vector<int>>& grid) {
+        int n = grid.size();
+        unordered_map<int, int> mp;
+        int name = 2;
+        vector<vector<bool>> vis(n, vector<bool>(n, false));
+        int delrow[] = {-1, 0, 1, 0};
+        int delcol[] = {0, 1, 0, -1};
+    
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1 && !vis[i][j]) {
+                    queue<pair<int, int>> q;
+                    q.push({i, j});
+                    vis[i][j] = 1;
+                    grid[i][j] = name;
+                    int count = 1;
+    
+                    while (!q.empty()) {
+                        int x = q.front().first;
+                        int y = q.front().second;
+                        q.pop();
+    
+                        for (int k = 0; k < 4; k++) {
+                            int nx = x + delrow[k];
+                            int ny = y + delcol[k];
+    
+                            if (nx >= 0 && nx < n && ny >= 0 && ny < n && !vis[nx][ny] && grid[nx][ny] == 1) {
+                                q.push({nx, ny});
+                                vis[nx][ny] = 1;
+                                grid[nx][ny] = name;
+                                count++;
+                            }
+                        }
+                    }
+    
+                    mp[name] = count;
+                    name++;
+                }
+            }
+        }
+
+        int ans = 0;
+    
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) {
+                    int res = 1;
+                    unordered_set<int> s;
+    
+                    for (int k = 0; k < 4; k++) {
+                        int x = i + delrow[k];
+                        int y = j + delcol[k];
+    
+                        if (x >= 0 && x < n && y >= 0 && y < n && grid[x][y] != 0) {
+                            s.insert(grid[x][y]);
+                        }
+                    }
+    
+                    for (auto it : s) {
+                        res += mp[it];
+                    }
+    
+                    ans = max(ans, res);
+                }
+            }
+        }
+    
+        if (ans == 0) return n * n;
+        return ans;
+    }
+};
