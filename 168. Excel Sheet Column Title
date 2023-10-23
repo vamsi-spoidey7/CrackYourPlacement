@@ -1,0 +1,19 @@
+class Solution {
+public:
+    string convertToTitle(int columnNumber) {
+        string ans = "";
+        while(columnNumber){
+            int rem = columnNumber % 26;
+            if(rem==0){
+                ans = 'Z' + ans;
+                columnNumber--;
+            }
+            else{
+                char ch = rem+64;
+                ans = ch + ans;
+            }
+            columnNumber /= 26;
+        }
+        return ans;
+    }
+};
