@@ -1,0 +1,19 @@
+class Solution {
+public:
+    bool isHappy(int n) {
+        unordered_set<int> hashSet;
+        while(true){
+            int sum = 0;
+            while(n){
+                sum += pow(n%10,2);
+                n /= 10;
+            }
+            if(sum==1) return true;
+            if(hashSet.find(sum)!=hashSet.end())
+                return false;
+            hashSet.insert(sum);
+            n = sum;
+        }
+        return false;
+    }
+};
