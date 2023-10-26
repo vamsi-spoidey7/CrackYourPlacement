@@ -1,0 +1,29 @@
+class Solution {
+public:
+    string frequencyString(string &str){
+        int freq[26] = {0};
+        for(int i=0;i<str.length();i++)
+            freq[str[i]-'a']++;
+        char c = 'a';
+        string ans = "";
+        for(int i=0;i<26;i++){
+            if(freq[i]!=0){
+                ans = ans + c + to_string(freq[i]);
+            }
+            c++;
+        }
+        return ans;
+    }
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string,vector<string>> mp;
+        for(int i=0;i<strs.size();i++){
+            string freqStr = frequencyString(strs[i]);
+            mp[freqStr].push_back(strs[i]);
+        }
+        vector<vector<string>> ans;
+        for(auto vec:mp){
+            ans.push_back(vec.second);
+        }
+        return ans;
+    }
+};
